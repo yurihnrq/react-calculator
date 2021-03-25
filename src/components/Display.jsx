@@ -8,10 +8,10 @@ const Display = props => {
     return (
         <section className="Display">
             <div className="exp-display">
-                Here's the math expression
+                { props.expression }
             </div>
             <div className="main-display">
-                Here's what the user is digiting
+                { props.displayValue }
             </div>
         </section>
     )

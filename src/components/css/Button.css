@@ -1,0 +1,19 @@
+.Button {
+    border: none;
+    font-size: 1.5rem;
+    background-color: transparent;
+    outline: none;
+}
+
+.number:active {
+    background-color: #AAA;
+}
+
+.action:active {
+    background-color: #9FE9EC;
+}
+
+.action:first-child {
+    font-size: 1rem;
+    font-weight: bolder;
+}
