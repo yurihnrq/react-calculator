@@ -1,5 +1,8 @@
 import React from 'react';
 
+//CSS
+import './Calculator.css';
+
 // Components
 import Display from '../components/Display';
 import Keys from '../components/Keys';
