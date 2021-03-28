@@ -11,7 +11,7 @@ const Display = props => {
                 { props.expression }
             </div>
             <div className="main-display">
-                { props.displayValue }
+                { props.main }
             </div>
         </section>
     )

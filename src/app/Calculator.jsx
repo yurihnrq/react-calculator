@@ -8,57 +8,71 @@ import Display from '../components/Display';
 import Button from '../components/Button';
 
 const Calculator = _ => {
+    
+    const operators = ['+', '-', '÷', '×'];
+    const [display, setDisplay] = useState({
+        main: '',
+        expression: ''
+    });
+    // const [stack, setStack] = useState([]);
 
-    const [displayValue, setDisplay] = useState( ' ' );
-    const [stack, setStack]          = useState( [ ] );
+    // Cleans calculator display
+    const cleanDisplay = target => {
+        const displayHandler={...display};
 
-    // Cleans the calculator display
-    const cleanCalc = _ => {
-        setDisplay('');
-        setStack([]);
+        // 1 -> main; 0 -> all
+        if (target === 1)
+            displayHandler.main = '';
+        else if (target === 0) {
+            displayHandler.main = '';
+            displayHandler.expression = '';
+        } else
+            console.log("cleadDisplay() => ERROR: incorrect parameter!");
+
+        setDisplay({...displayHandler});
     }
 
-    const calculate = (num1, num2, op) => {
-        if (op === '+')
-            return num1 + num2;
-        if (op === '-')
-            return num1 - num2;
-        if (op === '÷')
-            return num1 / num2;
-        if (op === '×')
-            return num1 * num2;
+    // const calculate = (num1, num2, op) => {
+    //     if (op === '+')
+    //         return num1 + num2;
+    //     if (op === '-')
+    //         return num1 - num2;
+    //     if (op === '÷')
+    //         return num1 / num2;
+    //     if (op === '×')
+    //         return num1 * num2;
+    // }
+
+
+    const checkOperator = _ => {
+        if (display.expression.length() === 0)
+            console.log("teste");
     }
 
     // Handle all inputed values
     const addDigit = n => {
         if (n === 'DEL') {
-            cleanCalc();
+            cleanDisplay(0);
             return;
         }
 
-        // Copy stack to change its value through pop() and push()
-        const stackHandler = stack;
-        let num1;
-        let num2;
-        let op; 
-        if (stackHandler.length > 0 && isNaN(stackHandler[stackHandler.length - 1])) {
-            op   = stackHandler.pop()
-            num1 = stackHandler.pop();
-            num2 = n;
+        // Copy display values to modify
+        const displayHandler = {...display};
 
-            console.log("Calc: " + num1 + op + num2);
-            stackHandler.push(calculate(num1, num2, op));
-            console.log("Result: " + stackHandler);   
-        } else {
-            stackHandler.push(n);
-            console.log(stackHandler);
-        }
-        setStack([...stackHandler]);
+        if (n !== "=")
+            displayHandler.expression = displayHandler.expression + n;
+
+        if (!isNaN(n))
+            displayHandler.main = displayHandler.main + n;
+        else
+            displayHandler.main = '';
+
+        setDisplay({...displayHandler});
     }
 
     return (
         <main className="Calculator">
-            <Display displayValue={ displayValue } expression={ stack }/>
+            <Display main={ display.main } expression={ display.expression }/>
             <div className="button-container">
                 <div className="numbers">
                     <Button class={'number'} value={ parseInt(7) }   click={addDigit} />
