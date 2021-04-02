@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 //CSS
 import './Calculator.css';
@@ -9,66 +9,62 @@ import Button from '../components/Button';
 
 const Calculator = _ => {
     
-    const operators = ['+', '-', '÷', '×'];
-    const [display, setDisplay] = useState({
-        main: '',
-        expression: ''
-    });
-    // const [stack, setStack] = useState([]);
+    // Calculator display values
+    const [display, setDisplay] = useState({main: '', expression: ''});
 
-    // Cleans calculator display
-    const cleanDisplay = target => {
-        const displayHandler={...display};
-
-        // 1 -> main; 0 -> all
-        if (target === 1)
-            displayHandler.main = '';
-        else if (target === 0) {
-            displayHandler.main = '';
-            displayHandler.expression = '';
-        } else
-            console.log("cleadDisplay() => ERROR: incorrect parameter!");
-
-        setDisplay({...displayHandler});
-    }
-
-    // const calculate = (num1, num2, op) => {
-    //     if (op === '+')
-    //         return num1 + num2;
-    //     if (op === '-')
-    //         return num1 - num2;
-    //     if (op === '÷')
-    //         return num1 / num2;
-    //     if (op === '×')
-    //         return num1 * num2;
-    // }
-
-
-    const checkOperator = _ => {
-        if (display.expression.length() === 0)
-            console.log("teste");
-    }
-
-    // Handle all inputed values
-    const addDigit = n => {
-        if (n === 'DEL') {
-            cleanDisplay(0);
-            return;
-        }
-
-        // Copy display values to modify
+    // Handle all values entered through keyboard or calculator buttons
+    const addDigit = useCallback(n => {
+        const operators = ['+', '-', '×', '÷'];
+        // Copy display values to handle them
         const displayHandler = {...display};
 
-        if (n !== "=")
-            displayHandler.expression = displayHandler.expression + n;
-
-        if (!isNaN(n))
-            displayHandler.main = displayHandler.main + n;
-        else
-            displayHandler.main = '';
-
+        if (n === 'DEL') {
+              displayHandler.main = '';
+              displayHandler.expression = '';
+        } else {
+            if (n !== "=") {
+                displayHandler.expression = displayHandler.expression + n;
+                if (operators.indexOf(n) > -1) {
+                    displayHandler.main = '';
+                    
+                } else 
+                    displayHandler.main = displayHandler.main + n;
+            } else {
+                
+            }
+        }
         setDisplay({...displayHandler});
-    }
+        console.log(display);
+    }, [display]);
+    
+    // Handle keys that calculator uses
+    const handleKeyPress = useCallback(event => {
+        const operatorsKeys = ['/', '*', '+', '-'];
+        const { key, keyCode } = event;
+
+        if (keyCode >= 48 && keyCode <= 57 && !isNaN(key))
+            addDigit(key);
+        else if (operatorsKeys.indexOf(key) > -1) {
+            if (key === '*')
+                addDigit('×');
+            else if (key === '/')
+                addDigit('÷');
+            else
+                addDigit(key);
+        } else if (keyCode === 46)
+            addDigit('DEL');
+        else if (key === "=" || key === "Enter")
+            addDigit('=');
+    }, [addDigit]);
+
+    // Handle component changes after render
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [handleKeyPress]);
 
     return (
         <main className="Calculator">
