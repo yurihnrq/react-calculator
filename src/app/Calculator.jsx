@@ -7,35 +7,85 @@ import './Calculator.css';
 import Display from '../components/Display';
 import Button from '../components/Button';
 
+// Checks if the char is a math operator
+const isOperator = c => {
+    const operators = ['+', '-', '×', '÷'];
+    if (operators.indexOf(c) > -1)
+        return true;
+    else
+        return false;
+}
+
 const Calculator = _ => {
     
     // Calculator display values
     const [display, setDisplay] = useState({main: '', expression: ''});
+    // Flag to handle expression changing
+    const [change, setChange]   = useState(false);
 
     // Handle all values entered through keyboard or calculator buttons
     const addDigit = useCallback(n => {
-        const operators = ['+', '-', '×', '÷'];
         // Copy display values to handle them
         const displayHandler = {...display};
 
+        // If user pressed DEL the display must be cleaned
         if (n === 'DEL') {
-              displayHandler.main = '';
-              displayHandler.expression = '';
-        } else {
-            if (n !== "=") {
-                displayHandler.expression = displayHandler.expression + n;
-                if (operators.indexOf(n) > -1) {
-                    displayHandler.main = '';
-                    
-                } else 
-                    displayHandler.main = displayHandler.main + n;
-            } else {
-                
-            }
+            displayHandler.main = '';
+            displayHandler.expression = '';
+            setDisplay({...displayHandler});
+            return;
         }
+
+        // Handle display to change expression
+        if (change) {
+            if (isOperator(n)) {
+                displayHandler.expression = displayHandler.main;
+                displayHandler.main = '';
+            } else {
+                displayHandler.expression = '';
+                displayHandler.main = '';
+            }
+            setChange(false);
+        }
+
+        // If user pressed key isn't = just add the digit to display
+        if (n !== "=") {
+            // If last digit typed is an operator and the current too the last digit must be substituted
+            const lastIndex = displayHandler.expression.length - 1;
+            if (
+                isOperator(displayHandler.expression[lastIndex])
+                && isOperator(n)
+            ) {
+                if (n !== displayHandler.expression[lastIndex])
+                    displayHandler.expression = 
+                        displayHandler.expression.substr(0, lastIndex) + n 
+                        + displayHandler.expression.substr(lastIndex+1);
+            } else
+                displayHandler.expression = displayHandler.expression + n;
+
+            // If an operator was typed the main display must be cleaned
+            if (isOperator(n)) {
+                displayHandler.main = '';
+            } else 
+                displayHandler.main = displayHandler.main + n;
+        // If user typed = the expression must be evaluated                    
+        } else {
+            let expression = displayHandler.expression;
+            if (expression.indexOf('÷') > -1)
+                expression = expression.replace('÷', '/');
+            if (expression.indexOf('×') > -1)
+                expression = expression.replace('×', '*');
+            
+            // eslint-disable-next-line no-eval
+            const result = eval(expression).toString();
+            displayHandler.main = result;
+
+            // The next digit must be in a new expression
+            setChange(true);
+        }
+        
         setDisplay({...displayHandler});
-        console.log(display);
-    }, [display]);
+    }, [display, change]);
     
     // Handle keys that calculator uses
     const handleKeyPress = useCallback(event => {
@@ -57,7 +107,6 @@ const Calculator = _ => {
             addDigit('=');
     }, [addDigit]);
 
-    // Handle component changes after render
     useEffect(() => {
         window.addEventListener('keydown', handleKeyPress);
 
