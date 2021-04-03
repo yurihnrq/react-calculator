@@ -53,8 +53,9 @@ const Calculator = _ => {
             // If last digit typed is an operator and the current too the last digit must be substituted
             const lastIndex = displayHandler.expression.length - 1;
             if (
-                isOperator(displayHandler.expression[lastIndex])
-                && isOperator(n)
+                (isOperator(displayHandler.expression[lastIndex])
+                || displayHandler.expression[lastIndex] === '.')
+                && (isOperator(n) || n === '.')
             ) {
                 if (n !== displayHandler.expression[lastIndex])
                     displayHandler.expression = 
@@ -66,8 +67,12 @@ const Calculator = _ => {
             // If an operator was typed the main display must be cleaned
             if (isOperator(n)) {
                 displayHandler.main = '';
-            } else 
-                displayHandler.main = displayHandler.main + n;
+            } else {
+                // Preventing the user from typing multiple points
+                const lastIndex = displayHandler.main.length - 1;
+                if (!(n === '.' && displayHandler.main[lastIndex] === '.'))
+                    displayHandler.main = displayHandler.main + n;
+            }
         // If user typed = the expression must be evaluated                    
         } else {
             let expression = displayHandler.expression;
@@ -77,8 +82,8 @@ const Calculator = _ => {
                 expression = expression.replace('×', '*');
             
             // eslint-disable-next-line no-eval
-            const result = eval(expression).toString();
-            displayHandler.main = result;
+            const result = Math.round(eval(expression) * 100) / 100;
+            displayHandler.main = result.toString();
 
             // The next digit must be in a new expression
             setChange(true);
