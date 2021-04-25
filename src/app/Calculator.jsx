@@ -10,10 +10,7 @@ import Button from '../components/Button';
 // Checks if the char is a math operator
 const isOperator = c => {
     const operators = ['+', '-', '×', '÷'];
-    if (operators.indexOf(c) > -1)
-        return true;
-    else
-        return false;
+    return operators.indexOf(c) > -1;
 }
 
 const Calculator = _ => {
@@ -125,7 +122,7 @@ const Calculator = _ => {
             <Display main={ display.main } expression={ display.expression }/>
             <div className="button-container">
                 <div className="numbers">
-                    <Button class={'number'} value={ parseInt(7) }   click={addDigit} />
+                    <Button class={'number'} value={ 7 }   click={addDigit} />
                     <Button class={'number'} value={ 8 }   click={addDigit} />
                     <Button class={'number'} value={ 9 }   click={addDigit} />
 
