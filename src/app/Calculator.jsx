@@ -25,6 +25,10 @@ const Calculator = _ => {
         // Copy display values to handle them
         const displayHandler = {...display};
 
+        // User can't add a dot if the number already has one
+        if (displayHandler.main.indexOf('.') >= 0 && n === '.')
+            return;
+
         // If user pressed DEL the display must be cleaned
         if (n === 'DEL') {
             displayHandler.main = '';
@@ -122,7 +126,7 @@ const Calculator = _ => {
             <Display main={ display.main } expression={ display.expression }/>
             <div className="button-container">
                 <div className="numbers">
-                    <Button class={'number'} value={ 7 }   click={addDigit} />
+                    <Button class={'number'} value={ parseInt(7) }   click={addDigit} />
                     <Button class={'number'} value={ 8 }   click={addDigit} />
                     <Button class={'number'} value={ 9 }   click={addDigit} />
 
