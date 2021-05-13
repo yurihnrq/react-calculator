@@ -5,13 +5,9 @@
     outline: none;
 }
 
-.number:active {
-    background-color: #AAA;
-}
+.number:active { background-color: #AAA; }
 
-.action:active {
-    background-color: #9FE9EC;
-}
+.action:active { background-color: #9FE9EC; }
 
 .action:first-child {
     font-size: 1rem;
