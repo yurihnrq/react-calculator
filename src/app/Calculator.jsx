@@ -10,10 +10,7 @@ import Button from '../components/Button';
 // Checks if the char is a math operator
 const isOperator = c => {
     const operators = ['+', '-', '×', '÷'];
-    if (operators.indexOf(c) > -1)
-        return true;
-    else
-        return false;
+    return operators.indexOf(c) > -1;
 }
 
 const Calculator = _ => {
@@ -27,6 +24,10 @@ const Calculator = _ => {
     const addDigit = useCallback(n => {
         // Copy display values to handle them
         const displayHandler = {...display};
+
+        // User can't add a dot if the number already has one
+        if (displayHandler.main.indexOf('.') >= 0 && n === '.')
+            return;
 
         // If user pressed DEL the display must be cleaned
         if (n === 'DEL') {

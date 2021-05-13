@@ -10,11 +10,6 @@
     grid-template-rows: 2fr 4fr;
 }
 
-.Display::-webkit-scrollbar-thumb {
-    background: red; 
-    border-radius: 10px;
-}
-
 .Display div {
     padding: 15px;
 
@@ -23,6 +18,12 @@
     align-items: center;
 }
 
-.Display .main-display {
-    font-size: 2.5rem;
+.Display .main-display { font-size: 2.5rem; }
+
+@media screen and (max-width: 600px) {
+    .Display { grid-template-rows: 4fr 4fr; }
+
+    .Display .exp-display { font-size: 2rem; }
+
+    .Display .main-display { font-size: 4rem; }
 }

@@ -36,3 +36,11 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
+
+@media screen and (max-width: 600px) {
+    .Calculator { 
+        border-radius: 0px; 
+        height: 100%;
+        width: 100%;
+    }
+}
